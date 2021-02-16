@@ -1,8 +1,8 @@
 class Drink {
-  String name;
+  String name = "<error>";
   Ingredient[] i;
-  int percentage;
-  String recipe;
+  int percentage = -1;
+  String recipe = "<error>";
 
   Drink(
       {
@@ -13,12 +13,10 @@ class Drink {
       });
 
   Drink.fromJson(Map<String, dynamic> json) {
-
     name = json['name'];
     i = json["ingredients"];
     percentage = json["percentage"];
     recipe = json["recipe"];
-
   }
 
   Map<String, dynamic> toJson() {
