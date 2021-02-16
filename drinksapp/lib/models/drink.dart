@@ -13,10 +13,18 @@ class Drink {
       });
 
   Drink.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    i = json["ingredients"];
-    percentage = json["percentage"];
-    recepie = json["recepie"];
+    if (json.containsKey("name")){
+       name = json['name'];
+    } 
+    if (json.containsKey("ingredients")) {
+       i = json["ingredients"];
+    }
+    if (json.containsKey("percentage")) {
+      percentage = json["percentage"];
+    }
+    if (json.containsKey("recepie")) {
+      recepie = json["recepie"];
+    }
   }
 
   Map<String, dynamic> toJson() {
