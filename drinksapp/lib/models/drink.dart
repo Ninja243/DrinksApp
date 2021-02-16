@@ -2,21 +2,21 @@ class Drink {
   String name;
   Ingredient[] i;
   int percentage;
-  String recepie;
+  String recipe;
 
   Drink(
       {
         required this.name,
         required this.i,
         required this.percentage,
-        required this.recepie
+        required this.recipe
       });
 
   Drink.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     i = json["ingredients"];
     percentage = json["percentage"];
-    recepie = json["recepie"];
+    recipe = json["recipe"];
   }
 
   Map<String, dynamic> toJson() {
@@ -24,7 +24,7 @@ class Drink {
     data['name'] = this.name;
     data['ingredients'] = this.i;
     data['percentage'] = this.percentage;
-    data['recepie'] = this.recepie;
+    data['recepie'] = this.recipe;
     return data;
   }
 }
