@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:drinksapp/config/size_config.dart';
+import 'package:drinksapp/config/app_theme.dart';
+import 'package:drinksapp/screen/Loading/Loading.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -17,17 +19,17 @@ class _MyApp extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     //return LifecycleWatcher( child:
-      return LayoutBuilder(builder: (context, constraints) {
-        return OrientationBuilder(builder: (context, orientation) {
-          SizeConfig().init(constraints, orientation);
+    return LayoutBuilder(builder: (context, constraints) {
+      return OrientationBuilder(builder: (context, orientation) {
+        SizeConfig().init(constraints, orientation);
 
-          return GetMaterialApp(
-            debugShowCheckedModeBanner: false,
-            //theme: AppTheme.lightTheme,
-            //home: LoadingScreen(),
-          );
-        });
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          home: LoadingScreen(),
+        );
       });
+    });
     //);
   }
 }
