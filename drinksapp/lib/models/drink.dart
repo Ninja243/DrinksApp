@@ -1,6 +1,6 @@
 class Drink {
   String name = "<error>";
-  Ingredient[] i;
+  Ingredient[] i = {};
   int percentage = -1;
   String recipe = "<error>";
 
