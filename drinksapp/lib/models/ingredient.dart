@@ -1,17 +1,22 @@
 import 'package:drinksapp/common/enums.dart';
+import 'package:flutter/material.dart';
 
 class Ingredient {
   String name;
-  int percentage;
-  int amountAvailable;
-  ingredientType itype;
-  Ingredient({this.name, this.percentage, this.amountAvailable, this.itype});
+  double percentage;
+  double amountAvailable;
+  IngredientType itype;
+  Ingredient({
+    @required this.name, 
+  @required this.percentage, 
+  @required this.amountAvailable, 
+  @required this.itype});
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     percentage = json["percentage"];
-    amountAvailable = json[amountAvailable];
-    itype = json[itype];
+    amountAvailable = json["amountAvailable"];
+    itype = json["itype"];
   }
 
   Map<String, dynamic> toJson() {
