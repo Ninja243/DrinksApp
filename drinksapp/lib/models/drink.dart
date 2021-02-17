@@ -1,7 +1,7 @@
 import 'package:drinksapp/models/ingredient.dart';
 class Drink {
   String name = "<error>";
-  var i = new List<Ingredient>();
+  var i = <Ingredient>[];
   int percentage = -1;
   String recipe = "<error>";
 
