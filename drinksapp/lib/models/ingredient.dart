@@ -6,10 +6,10 @@ class Ingredient {
   int amountAvailable;
   ingredientType itype;
   Ingredient(
-      {required this.name,
-      required this.percentage,
-      required this.amountAvailable,
-      required this.itype});
+      {this.name,
+      this.percentage,
+      this.amountAvailable,
+      this.itype});
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     name = json['name'];
