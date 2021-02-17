@@ -25,8 +25,7 @@ class _HomeScreenState extends State<Home> {
             BottomNavyBarItem(
                 icon: Icon(Icons.access_alarm), title: Text('Drinks')),
             BottomNavyBarItem(
-                icon: Icon(Icons.settings_applications),
-                title: Text('Settings')),
+                icon: Icon(Icons.settings), title: Text('Settings')),
           ],
         ),
         body: getBody(_currentIndex));
