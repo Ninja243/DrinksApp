@@ -1,15 +1,16 @@
+import 'package:drinksapp/models/ingredient.dart';
 class Drink {
   String name = "<error>";
-  Ingredient[] i = {};
+  var i = new List<Ingredient>();
   int percentage = -1;
   String recipe = "<error>";
 
   Drink(
       {
-        required this.name,
-        required this.i,
-        required this.percentage,
-        required this.recipe
+        this.name,
+        this.i,
+        this.percentage,
+        this.recipe
       });
 
   Drink.fromJson(Map<String, dynamic> json) {
