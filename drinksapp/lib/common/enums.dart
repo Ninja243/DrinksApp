@@ -1,0 +1,1 @@
+enum ingredientType { strongAlcohol, weakAlcohol, noAlcohol, strongFlavor }

@@ -1,7 +1,6 @@
 import 'package:drinksapp/screen/Ingredient/view/ingredient_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-import 'package:drinksapp/screen/Ingredient/Ingredient.dart';
 
 class Home extends StatefulWidget {
   @override

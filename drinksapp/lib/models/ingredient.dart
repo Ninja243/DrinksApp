@@ -1,15 +1,11 @@
-enum ingredientType { strongAlcohol, weakAlcohol, noAlcohol, strongFlavor }
+import 'package:drinksapp/common/enums.dart';
 
 class Ingredient {
   String name;
   int percentage;
   int amountAvailable;
   ingredientType itype;
-  Ingredient(
-      {this.name,
-      this.percentage,
-      this.amountAvailable,
-      this.itype});
+  Ingredient({this.name, this.percentage, this.amountAvailable, this.itype});
 
   Ingredient.fromJson(Map<String, dynamic> json) {
     name = json['name'];
