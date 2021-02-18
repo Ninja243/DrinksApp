@@ -6,7 +6,7 @@ class IngredientController extends GetxController {
 
   List<Ingredient> getIngredients() => _ingredients;
 
-  Ingredient getIngredient(int i) => _ingredients[i];
+  Ingredient getIngredient(int index) => _ingredients[index];
 
   setIngredients(List<Ingredient> i) {
     this._ingredients.assignAll(i);
@@ -14,5 +14,13 @@ class IngredientController extends GetxController {
 
   addIngredient(Ingredient i) {
     this._ingredients.add(i);
+  }
+
+  deleteIngredientFromIndex(int index) {
+    this._ingredients.removeAt(index);
+  }
+
+  deleteIngredient(Ingredient ingredient) {
+    this._ingredients.removeWhere((item) => ingredient == item);
   }
 }
