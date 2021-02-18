@@ -154,7 +154,47 @@ class _IngredientScreenState extends State<IngredientScreen> {
                   showDialog(
                       context: context,
                       builder: (context) {
+                        _ingredientNameController.text =
+                            _itemController.getIngredient(index).name;
+                        _ingredientAmountController.text = _itemController
+                            .getIngredient(index)
+                            .amountAvailable
+                            .toString();
+                        _ingredientPercentageController.text = _itemController
+                            .getIngredient(index)
+                            .percentage
+                            .toString();
                         return AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: _ingredientNameController,
+                                decoration: InputDecoration(
+                                    hintText: "Ingredient name",
+                                    suffixIcon: Icon(Feather.at_sign)),
+                              ),
+                              TextField(
+                                controller: _ingredientPercentageController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    hintText: "Alc. Percentage",
+                                    suffixIcon: Icon(Feather.percent)),
+                                onChanged: (value) =>
+                                    this._ingredientPercentage =
+                                        double.tryParse(value),
+                              ),
+                              TextField(
+                                controller: _ingredientAmountController,
+                                keyboardType: TextInputType.number,
+                                decoration: InputDecoration(
+                                    hintText: "Bottles available",
+                                    suffixIcon: Icon(Feather.package)),
+                                onChanged: (value) => this._ingredientAmount =
+                                    double.tryParse(value),
+                              ),
+                            ],
+                          ),
                           actions: [
                             TextButton(
                               child: Text("Cancel",
@@ -163,9 +203,64 @@ class _IngredientScreenState extends State<IngredientScreen> {
                                 Navigator.of(context).pop();
                               },
                             ),
-                            TextButton(child: Text("Update"), onPressed: () {
-                              // TODO
-                            }),
+                            TextButton(
+                                child: Text("Update"),
+                                onPressed: () {
+                                  if (this._ingredientAmount != null &&
+                                      this._ingredientPercentage != null &&
+                                      this._ingredientNameController.text !=
+                                          null &&
+                                      this._ingredientAmount != 0 &&
+                                      this._ingredientNameController.text !=
+                                          "") {
+                                    _itemController.getIngredient(index).name =
+                                        this._ingredientNameController.text;
+                                    _itemController
+                                            .getIngredient(index)
+                                            .percentage =
+                                        this._ingredientPercentage;
+                                    _itemController
+                                        .getIngredient(index)
+                                        .amountAvailable = _ingredientAmount;
+                                    _itemController
+                                        .getIngredient(index)
+                                        .update();
+                                    setState(() {});
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    if (this._ingredientAmountController.text ==
+                                        "0") {
+                                      this._ingredientAmountController.text =
+                                          "You're really trying to add something you have none of? 🐦";
+                                    }
+                                    if (this._ingredientAmountController.text ==
+                                            null ||
+                                        this._ingredientAmountController.text ==
+                                            "") {
+                                      this._ingredientAmountController.text =
+                                          "0";
+                                    }
+                                    if (this
+                                                ._ingredientPercentageController
+                                                .text ==
+                                            null ||
+                                        this
+                                                ._ingredientPercentageController
+                                                .text ==
+                                            "") {
+                                      this
+                                          ._ingredientPercentageController
+                                          .text = "0";
+                                    }
+                                    if (this._ingredientNameController.text ==
+                                            null ||
+                                        this._ingredientNameController.text ==
+                                            "") {
+                                      this._ingredientNameController.text =
+                                          "Add a drink name, ya dingus";
+                                    }
+                                  }
+                                }),
                           ],
                         );
                       });
