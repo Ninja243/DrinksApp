@@ -58,6 +58,7 @@ flutter:
   assets:
   - "lib/assets/empty_bottles.json"
   - "lib/assets/loading.json"
+  - "lib/assets/user.json"
   - "lib/assets/error.json"
 
   # To add assets to your application, add an assets section, like this:
