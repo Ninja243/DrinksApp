@@ -45,11 +45,9 @@ class IngredientController extends GetxController {
   saveList() {
     List<String> l = [];
     for (Ingredient i in _ingredients) {
-      print(jsonEncode(i));
       l.add(jsonEncode(i));
     }
     prefs.setStringList("ingredients", l);
-    print(prefs.getStringList("ingredients"));
   }
 
   setIngredients(List<Ingredient> i) {
