@@ -106,7 +106,19 @@ class _IngredientScreenState extends State<IngredientScreen>
                           if (this._ingredientAmount != null &&
                               this._ingredientPercentage != null &&
                               this._ingredientNameController.text != null &&
-                              this._ingredientAmount != 0 &&
+                              this._ingredientAmount != 0 && 
+                                                  double.tryParse(this
+                                                          ._ingredientAmountController
+                                                          .text) >
+                                                      0 &&
+                                                  double.tryParse(this
+                                                          ._ingredientPercentageController
+                                                          .text) >=
+                                                      0 &&
+                                                  double.tryParse(this
+                                                          ._ingredientPercentageController
+                                                          .text) <=
+                                                      100 &&
                               this._ingredientNameController.text != "") {
                             _itemController.addIngredient(new Ingredient(
                               _ingredientNameController.text,
@@ -116,35 +128,54 @@ class _IngredientScreenState extends State<IngredientScreen>
                             Navigator.of(context).pop();
                           } else {
                             if (this._ingredientAmountController.text == "0") {
-                              this._ingredientAmountController.text =
-                                  "You're really trying to add something you have none of? 🐦";
-                            }
-                            if (this
-                                ._ingredientAmountController
-                                .text
-                                .startsWith("-")) {
-                              this._ingredientAmountController.text = "No";
-                            }
-                            if (this
-                                ._ingredientPercentageController
-                                .text
-                                .startsWith("-")) {
-                              this._ingredientPercentageController.text = "No";
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text(
+                                    "You're really trying to add something you have none of? 🐦"),
+                              ));
                             }
                             if (this._ingredientAmountController.text == null ||
                                 this._ingredientAmountController.text == "") {
                               this._ingredientAmountController.text = "0";
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text("Please add an amount"),
+                              ));
                             }
                             if (this._ingredientPercentageController.text ==
                                     null ||
                                 this._ingredientPercentageController.text ==
                                     "") {
                               this._ingredientPercentageController.text = "0";
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content:
+                                    Text("Please add an alcohol percentage."),
+                              ));
                             }
-                            if (this._ingredientNameController.text == null ||
-                                this._ingredientNameController.text == "") {
-                              this._ingredientNameController.text =
-                                  "Add a drink name, ya dingus";
+
+                            if (double.tryParse(
+                                    this._ingredientPercentageController.text) >
+                                100) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      "There's no way this is more than 100% alcohol")));
+                            }
+                            if (double.tryParse(this
+                                        ._ingredientPercentageController
+                                        .text) <
+                                    0 ||
+                                double.tryParse(
+                                        this._ingredientAmountController.text) <
+                                    0) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("What the fuck 🧐")));
+                            }
+                            if (this._ingredientNameController.text == "") {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text("Add a name, ya dingus 🙄")));
                             }
                           }
                         },
@@ -278,9 +309,10 @@ class _IngredientScreenState extends State<IngredientScreen>
                                                   double.tryParse(
                                                       _ingredientPercentageController
                                                           .text);
-                                              if (this._ingredientAmountController.text !=
-                                                      null &&
-                                                  this._ingredientPercentageController.text !=
+                                              if (this._ingredientAmountController.text != null &&
+                                                  this
+                                                          ._ingredientPercentageController
+                                                          .text !=
                                                       null &&
                                                   this
                                                           ._ingredientNameController
@@ -290,6 +322,14 @@ class _IngredientScreenState extends State<IngredientScreen>
                                                           ._ingredientAmountController
                                                           .text) !=
                                                       0 &&
+                                                  double.tryParse(this
+                                                          ._ingredientPercentageController
+                                                          .text) >=
+                                                      0 &&
+                                                  double.tryParse(this
+                                                          ._ingredientPercentageController
+                                                          .text) <=
+                                                      100 &&
                                                   this
                                                           ._ingredientNameController
                                                           .text !=
@@ -313,10 +353,11 @@ class _IngredientScreenState extends State<IngredientScreen>
                                                         ._ingredientAmountController
                                                         .text ==
                                                     "0") {
-                                                  this
-                                                          ._ingredientAmountController
-                                                          .text =
-                                                      "You're really trying to add something you have none of? 🐦";
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "You're really trying to add something you have none of? 🐦"),
+                                                  ));
                                                 }
                                                 if (this
                                                             ._ingredientAmountController
@@ -329,6 +370,11 @@ class _IngredientScreenState extends State<IngredientScreen>
                                                   this
                                                       ._ingredientAmountController
                                                       .text = "0";
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "Please add an amount"),
+                                                  ));
                                                 }
                                                 if (this
                                                             ._ingredientPercentageController
@@ -341,6 +387,11 @@ class _IngredientScreenState extends State<IngredientScreen>
                                                   this
                                                       ._ingredientPercentageController
                                                       .text = "0";
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "Please add an alcohol percentage."),
+                                                  ));
                                                 }
                                                 if (this
                                                             ._ingredientNameController
@@ -350,12 +401,43 @@ class _IngredientScreenState extends State<IngredientScreen>
                                                             ._ingredientNameController
                                                             .text ==
                                                         "") {
-                                                  this
-                                                          ._ingredientNameController
-                                                          .text =
-                                                      "Add a drink name, ya dingus";
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                    content: Text(
+                                                        "You're really trying to add something you have none of? 🐦"),
+                                                  ));
                                                 }
-                                                
+                                                if (double.tryParse(this
+                                                        ._ingredientPercentageController
+                                                        .text) >
+                                                    100) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "There's no way this is more than 100% alcohol")));
+                                                }
+                                                if (double.tryParse(this
+                                                            ._ingredientPercentageController
+                                                            .text) <
+                                                        0 ||
+                                                    double.tryParse(this
+                                                            ._ingredientAmountController
+                                                            .text) <
+                                                        0) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "What the fuck 🧐")));
+                                                }
+                                                if (this
+                                                        ._ingredientNameController
+                                                        .text ==
+                                                    "") {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "Add a name, ya dingus 🙄")));
+                                                }
                                               }
                                             }),
                                       ],
