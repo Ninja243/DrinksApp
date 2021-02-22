@@ -11,11 +11,19 @@ class Ingredient {
     this.name = name;
     this.percentage = percentage;
     this.amountAvailable = amountAvailable;
-    this.itype = this.percentage > 35
+    this.itype = this.percentage > 20
         ? IngredientType.STRONG_ALCOHOLIC_DRINK
         : this.percentage > 4
             ? IngredientType.WEAK_ALCOHOLIC_DRINK
             : IngredientType.NON_ALCOHOLIC_DRINK;
+  }
+
+  Ingredient.fromData(String name, double percentage, double amountAvailable,
+      IngredientType itype) {
+    this.name = name;
+    this.percentage = percentage;
+    this.amountAvailable = amountAvailable;
+    this.itype = itype;
   }
 
   void update() {
@@ -27,18 +35,16 @@ class Ingredient {
   }
 
   Ingredient.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    percentage = json["percentage"];
-    amountAvailable = json["amountAvailable"];
-    itype = json["itype"];
+    this.name = json['name'];
+    this.percentage = json["percentage"];
+    this.amountAvailable = json["amountAvailable"];
+    this.itype = IngredientType.values.firstWhere((e) => e.toString() == json["itype"]);
   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['percentage'] = this.percentage;
-    data['amountAvailable'] = this.amountAvailable;
-    data['itype'] = this.itype;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+        'name': this.name,
+        'percentage': this.percentage,
+        'amountAvailable': this.amountAvailable,
+        'itype': this.itype.toString(),
+      };
 }
