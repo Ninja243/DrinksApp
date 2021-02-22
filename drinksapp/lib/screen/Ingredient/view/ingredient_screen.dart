@@ -40,7 +40,7 @@ class _IngredientScreenState extends State<IngredientScreen>
     _ingredientNameController.dispose();
     _ingredientPercentageController.dispose();
     _ingredientAmountController.dispose();
-    _itemController.saveList();
+    //_itemController.saveList();
     _itemController.dispose();
     _animationController.dispose();
     super.dispose();
@@ -270,36 +270,42 @@ class _IngredientScreenState extends State<IngredientScreen>
                                         TextButton(
                                             child: Text("Update"),
                                             onPressed: () {
-                                              if (this._ingredientAmount !=
+                                              this._ingredientAmount =
+                                                  double.tryParse(
+                                                      _ingredientAmountController
+                                                          .text);
+                                              this._ingredientPercentage =
+                                                  double.tryParse(
+                                                      _ingredientPercentageController
+                                                          .text);
+                                              if (this._ingredientAmountController.text !=
                                                       null &&
-                                                  this._ingredientPercentage !=
+                                                  this._ingredientPercentageController.text !=
                                                       null &&
                                                   this
                                                           ._ingredientNameController
                                                           .text !=
                                                       null &&
-                                                  this._ingredientAmount != 0 &&
+                                                  double.tryParse(this
+                                                          ._ingredientAmountController
+                                                          .text) !=
+                                                      0 &&
                                                   this
                                                           ._ingredientNameController
                                                           .text !=
                                                       "") {
                                                 _itemController
-                                                        .getIngredient(index)
-                                                        .name =
-                                                    this
-                                                        ._ingredientNameController
-                                                        .text;
-                                                _itemController
-                                                        .getIngredient(index)
-                                                        .percentage =
-                                                    this._ingredientPercentage;
-                                                _itemController
-                                                        .getIngredient(index)
-                                                        .amountAvailable =
-                                                    _ingredientAmount;
-                                                _itemController
                                                     .getIngredient(index)
-                                                    .update();
+                                                    .updateData(
+                                                        this
+                                                            ._ingredientNameController
+                                                            .text,
+                                                        double.tryParse(this
+                                                            ._ingredientPercentageController
+                                                            .text),
+                                                        double.tryParse(this
+                                                            ._ingredientAmountController
+                                                            .text));
                                                 setState(() {});
                                                 Navigator.of(context).pop();
                                               } else {
@@ -349,6 +355,7 @@ class _IngredientScreenState extends State<IngredientScreen>
                                                           .text =
                                                       "Add a drink name, ya dingus";
                                                 }
+                                                
                                               }
                                             }),
                                       ],
