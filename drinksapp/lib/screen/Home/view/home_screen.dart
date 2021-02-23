@@ -1,9 +1,13 @@
+import 'package:drinksapp/common/enums.dart';
+import 'package:drinksapp/controller/ingredient_controller.dart';
 import 'package:drinksapp/screen/Ingredient/view/ingredient_screen.dart';
 import 'package:drinksapp/screen/Settings/view/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:drinksapp/controller/settings_controller.dart';
+import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,7 +15,24 @@ class Home extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<Home> {
+  SettingsController _settingsController;
+  IngredientController _itemController;
+
   int _currentIndex = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _itemController = Get.put(new IngredientController());
+    _settingsController = Get.put(new SettingsController());
+  }
+
+  @override
+  void dispose() {
+    _itemController.dispose();
+    _settingsController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,16 +91,30 @@ class _HomeScreenState extends State<Home> {
                   curve: Curves.easeIn,
                   onItemSelected: (index) =>
                       setState(() => _currentIndex = index),
-                  items: <BottomNavyBarItem>[
-                    BottomNavyBarItem(
-                        icon: Icon(FlutterIcons.bottle_wine_mco),
-                        title: Text('Ingredients')),
-                    BottomNavyBarItem(
-                        icon: Icon(FlutterIcons.glass_cocktail_mco),
-                        title: Text('Drinks')),
-                    BottomNavyBarItem(
-                        icon: Icon(Icons.settings), title: Text('Settings')),
-                  ],
+                  items: _settingsController.getActiveBehaviourType() ==
+                          GeneratorBehaviourType.UNDER_18
+                      ? <BottomNavyBarItem>[
+                          BottomNavyBarItem(
+                              icon: Icon(FlutterIcons.utensil_spoon_faw5s),
+                              title: Text('Ingredients')),
+                          BottomNavyBarItem(
+                              icon: Icon(FlutterIcons.baby_bottle_mco),
+                              title: Text('Drinks')),
+                          BottomNavyBarItem(
+                              icon: Icon(Icons.settings),
+                              title: Text('Settings')),
+                        ]
+                      : <BottomNavyBarItem>[
+                          BottomNavyBarItem(
+                              icon: Icon(FlutterIcons.bottle_wine_mco),
+                              title: Text('Ingredients')),
+                          BottomNavyBarItem(
+                              icon: Icon(FlutterIcons.glass_cocktail_mco),
+                              title: Text('Drinks')),
+                          BottomNavyBarItem(
+                              icon: Icon(Icons.settings),
+                              title: Text('Settings')),
+                        ],
                 ),
                 body: getBody(_currentIndex))));
   }
