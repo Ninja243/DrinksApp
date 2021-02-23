@@ -25,7 +25,7 @@ class _HomeScreenState extends State<Home> {
                 appBar: AppBar(
                     title: _currentIndex == 1
                         ? TextLiquidFill(
-                          
+
                           loadUntil: 0.67,
                             text: 'Drinks',
                             loadDuration: Duration(seconds: 2),

@@ -221,10 +221,7 @@ class _IngredientScreenState extends State<IngredientScreen>
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Text(
-                                "${_itemController.getIngredient(index).name} (${_itemController.getIngredient(index).percentage}%)"),
-                            subtitle: Text(
-                                "${_itemController.getIngredient(index).itype}"),
-                            tileColor: _itemController
+                                "${_itemController.getIngredient(index).name} (${_itemController.getIngredient(index).percentage}%)", style: TextStyle(color: _itemController
                                         .getIngredient(index)
                                         .itype ==
                                     IngredientType.STRONG_ALCOHOLIC_DRINK
@@ -232,7 +229,10 @@ class _IngredientScreenState extends State<IngredientScreen>
                                 : _itemController.getIngredient(index).itype ==
                                         IngredientType.WEAK_ALCOHOLIC_DRINK
                                     ? Colors.amber
-                                    : Colors.white,
+                                    : Colors.white,)),
+                            subtitle: Text(
+                                "${_itemController.getIngredient(index).itype}"),
+                            
                             onTap: () {
                               showDialog(
                                   context: context,
