@@ -23,6 +23,13 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   @override
+  void dispose() {
+    _settingsController.dispose();
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: FutureBuilder(
@@ -77,7 +84,6 @@ class _SettingsScreenState extends State<SettingsScreen>
                                               .toString()
                                               .indexOf(".") +
                                           1),
-                                          
                           onChanged: (value) {
                             if (value) {
                               _settingsController.setActiveBehaviourType(
@@ -88,7 +94,6 @@ class _SettingsScreenState extends State<SettingsScreen>
                                               .getID()));
                               _settingsController.update();
                               setState(() {});
-                             
                             } else {
                               if (_settingsController
                                       .getSetting(index)
@@ -104,8 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           1)) {
                                 _settingsController.setActiveBehaviourType(
                                     GeneratorBehaviourType.DEFAULT);
-                                    setState(() {});
-                                
+                                setState(() {});
                               }
                             }
                           });

@@ -229,7 +229,7 @@ class _IngredientScreenState extends State<IngredientScreen>
                                 : _itemController.getIngredient(index).itype ==
                                         IngredientType.WEAK_ALCOHOLIC_DRINK
                                     ? Colors.amber
-                                    : Colors.white,)),
+                                    : Colors.black,)),
                             subtitle: Text(
                                 "${_itemController.getIngredient(index).itype}"),
                             

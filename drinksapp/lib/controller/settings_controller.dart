@@ -19,11 +19,8 @@ class SettingsController extends GetxController {
   SettingEntry getSetting(int index) => this._settings[index];
 
   setActiveBehaviourType(GeneratorBehaviourType behaviourType) {
-    //this._gtype.update((val) {
-    //  val = behaviourType;
-    //});
-    //print("canUpdate: " + _gtype.canUpdate.toString());
     this._gtype.value = behaviourType;
+    saveSettings();
   }
 
   GeneratorBehaviourType getActiveBehaviourType() => this._gtype.value;
@@ -34,13 +31,26 @@ class SettingsController extends GetxController {
       Future.delayed(Duration(seconds: 0), () async {
         if (this._isReady == false) {
           _prefs = await SharedPreferences.getInstance();
-          this._gtype.update((val) {
-            val = GeneratorBehaviourType.DEFAULT;
-          });
-          if (_prefs.getStringList("settings") != null) {
-            for (String s in _prefs.getStringList("settings")) {
-              _settings.add(new SettingEntry.fromJson(jsonDecode(s)));
+          String activeMode = _prefs.getString("active_mode");
+          if (activeMode != null && activeMode != "") {
+            this._gtype.value =
+                convertStringToGeneratorBehaviourType(activeMode);
+            if (this._gtype.value == null) {
+              print("PANIC -> gtype is null");
+              this._gtype.value = GeneratorBehaviourType.DEFAULT;
             }
+          } else {
+            this._gtype.value = GeneratorBehaviourType.DEFAULT;
+          }
+          if (_prefs.getString("settings") != null) {
+            List<dynamic> x = jsonDecode(_prefs.getString("settings"));
+            for (Map<String, dynamic> y in x) {
+              _settings.add(new SettingEntry.fromJson(y));
+            }
+            //for (String s in _prefs.getStringList("settings")) {
+
+            //  //_settings.add(new SettingEntry.fromJson(jsonDecode(s)));
+            //}
           } else {
             this._settings.addAll([
               SettingEntry("Andi's Mode", "default"),
@@ -58,16 +68,62 @@ class SettingsController extends GetxController {
 
   saveSettings() {
     this._prefs.setString("settings", jsonEncode(this._settings));
+    this._prefs.setString(
+        "active_mode",
+        jsonEncode(this
+            .getActiveBehaviourType()
+            .toString()
+            .toLowerCase()
+            .substring(
+                this.getActiveBehaviourType().toString().indexOf(".") + 1)));
   }
 
+  // this is *VERY* bad code
   GeneratorBehaviourType convertStringToGeneratorBehaviourType(String s) {
-    return GeneratorBehaviourType.values.firstWhere((element) {
-      return element
-              .toString()
-              .toLowerCase()
-              .substring(element.toString().indexOf(".") + 1) ==
-          s.toLowerCase();
-    });
+    try {
+      return GeneratorBehaviourType.values.firstWhere((element) {
+        return element
+                .toString()
+                .toLowerCase()
+                .substring(element.toString().indexOf(".") + 1) ==
+            s.toLowerCase();
+      });
+    } catch (e) {
+      if (e.toString() == "Bad state: No element") {
+        try {
+          return GeneratorBehaviourType.values.firstWhere((element) {
+            return '"' +
+                    element
+                        .toString()
+                        .toLowerCase()
+                        .substring(element.toString().indexOf(".") + 1) +
+                    '"' ==
+                s.toLowerCase();
+          });
+        } catch (e) {
+          for (GeneratorBehaviourType v in GeneratorBehaviourType.values) {
+            if ('"' +
+                    v
+                        .toString()
+                        .toLowerCase()
+                        .substring(v.toString().indexOf(".") + 1) +
+                    '"' ==
+                s.toLowerCase()) {
+              print(s + " == " + v.toString());
+            } else {
+              print(s +
+                  "!=" +
+                  v
+                      .toString()
+                      .toLowerCase()
+                      .substring(v.toString().indexOf(".") + 1));
+            }
+          }
+        }
+      }
+
+      return GeneratorBehaviourType.DEFAULT;
+    }
     //return null;
   }
 
