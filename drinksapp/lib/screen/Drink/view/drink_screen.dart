@@ -1,8 +1,4 @@
-import 'package:drinksapp/models/drink.dart';
 import 'package:flutter/material.dart';
-import 'package:drinksapp/common/enums.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:get/get.dart';
 
 class DrinkScreen extends StatefulWidget {
   @override
