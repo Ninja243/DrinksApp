@@ -451,35 +451,35 @@ class _IngredientScreenState extends State<IngredientScreen>
                             trailing: GestureDetector(
                               child: Icon(FlutterIcons.trash_2_fea),
                               onTap: () {
-                                 showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      content: Text(
-                                          "Would you really like to delete ${_itemController.getIngredient(index).name}?"),
-                                      actions: [
-                                        TextButton(
-                                            child: Text(
-                                              "No",
-                                              style: TextStyle(
-                                                  color: Colors.redAccent),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }),
-                                        TextButton(
-                                            child: Text(
-                                              "Yeah",
-                                            ),
-                                            onPressed: () {
-                                              _itemController
-                                                  .deleteIngredientFromIndex(
-                                                      index);
-                                              Navigator.of(context).pop();
-                                            })
-                                      ],
-                                    );
-                                  });
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        content: Text(
+                                            "Would you really like to delete ${_itemController.getIngredient(index).name}?"),
+                                        actions: [
+                                          TextButton(
+                                              child: Text(
+                                                "No",
+                                                style: TextStyle(
+                                                    color: Colors.redAccent),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              }),
+                                          TextButton(
+                                              child: Text(
+                                                "Yeah",
+                                              ),
+                                              onPressed: () {
+                                                _itemController
+                                                    .deleteIngredientFromIndex(
+                                                        index);
+                                                Navigator.of(context).pop();
+                                              })
+                                        ],
+                                      );
+                                    });
                               },
                             ),
                             onLongPress: () {
