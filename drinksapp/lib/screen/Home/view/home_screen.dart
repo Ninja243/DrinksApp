@@ -3,6 +3,7 @@ import 'package:drinksapp/screen/Settings/view/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -23,10 +24,10 @@ class _HomeScreenState extends State<Home> {
             right: true,
             child: Scaffold(
                 appBar: AppBar(
+                    centerTitle: true,
                     title: _currentIndex == 1
                         ? TextLiquidFill(
-
-                          loadUntil: 0.67,
+                            loadUntil: 0.67,
                             text: 'Drinks',
                             loadDuration: Duration(seconds: 2),
                             waveColor: Colors.white,
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<Home> {
                           )
                         : _currentIndex == 2
                             ? TextLiquidFill(
-                              loadUntil: 0.67,
+                                loadUntil: 0.67,
                                 text: 'Settings',
                                 loadDuration: Duration(seconds: 2),
                                 waveColor: Colors.white,
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<Home> {
                                 boxHeight: 200.0,
                               )
                             : TextLiquidFill(
-                              loadUntil: 0.67,
+                                loadUntil: 0.67,
                                 text: 'Ingredients',
                                 loadDuration: Duration(seconds: 2),
                                 waveColor: Colors.white,
@@ -71,10 +72,10 @@ class _HomeScreenState extends State<Home> {
                       setState(() => _currentIndex = index),
                   items: <BottomNavyBarItem>[
                     BottomNavyBarItem(
-                        icon: Icon(Icons.food_bank_rounded),
+                        icon: Icon(FlutterIcons.bottle_wine_mco),
                         title: Text('Ingredients')),
                     BottomNavyBarItem(
-                        icon: Icon(Icons.local_drink_rounded),
+                        icon: Icon(FlutterIcons.glass_cocktail_mco),
                         title: Text('Drinks')),
                     BottomNavyBarItem(
                         icon: Icon(Icons.settings), title: Text('Settings')),

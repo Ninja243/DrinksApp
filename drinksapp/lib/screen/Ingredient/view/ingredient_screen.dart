@@ -106,19 +106,18 @@ class _IngredientScreenState extends State<IngredientScreen>
                           if (this._ingredientAmount != null &&
                               this._ingredientPercentage != null &&
                               this._ingredientNameController.text != null &&
-                              this._ingredientAmount != 0 && 
-                                                  double.tryParse(this
-                                                          ._ingredientAmountController
-                                                          .text) >
-                                                      0 &&
-                                                  double.tryParse(this
-                                                          ._ingredientPercentageController
-                                                          .text) >=
-                                                      0 &&
-                                                  double.tryParse(this
-                                                          ._ingredientPercentageController
-                                                          .text) <=
-                                                      100 &&
+                              this._ingredientAmount != 0 &&
+                              double.tryParse(
+                                      this._ingredientAmountController.text) >
+                                  0 &&
+                              double.tryParse(this
+                                      ._ingredientPercentageController
+                                      .text) >=
+                                  0 &&
+                              double.tryParse(this
+                                      ._ingredientPercentageController
+                                      .text) <=
+                                  100 &&
                               this._ingredientNameController.text != "") {
                             _itemController.addIngredient(new Ingredient(
                               _ingredientNameController.text,
@@ -221,18 +220,23 @@ class _IngredientScreenState extends State<IngredientScreen>
                         itemBuilder: (context, index) {
                           return ListTile(
                             title: Text(
-                                "${_itemController.getIngredient(index).name} (${_itemController.getIngredient(index).percentage}%)", style: TextStyle(color: _itemController
-                                        .getIngredient(index)
-                                        .itype ==
-                                    IngredientType.STRONG_ALCOHOLIC_DRINK
-                                ? Colors.red
-                                : _itemController.getIngredient(index).itype ==
-                                        IngredientType.WEAK_ALCOHOLIC_DRINK
-                                    ? Colors.amber
-                                    : Colors.black,)),
+                                "${_itemController.getIngredient(index).name} (${_itemController.getIngredient(index).percentage}%)",
+                                style: TextStyle(
+                                  color: _itemController
+                                              .getIngredient(index)
+                                              .itype ==
+                                          IngredientType.STRONG_ALCOHOLIC_DRINK
+                                      ? Colors.red
+                                      : _itemController
+                                                  .getIngredient(index)
+                                                  .itype ==
+                                              IngredientType
+                                                  .WEAK_ALCOHOLIC_DRINK
+                                          ? Colors.amber
+                                          : Colors.black,
+                                )),
                             subtitle: Text(
                                 "${_itemController.getIngredient(index).itype}"),
-                            
                             onTap: () {
                               showDialog(
                                   context: context,
@@ -444,6 +448,40 @@ class _IngredientScreenState extends State<IngredientScreen>
                                     );
                                   });
                             },
+                            trailing: GestureDetector(
+                              child: Icon(FlutterIcons.trash_2_fea),
+                              onTap: () {
+                                 showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      content: Text(
+                                          "Would you really like to delete ${_itemController.getIngredient(index).name}?"),
+                                      actions: [
+                                        TextButton(
+                                            child: Text(
+                                              "No",
+                                              style: TextStyle(
+                                                  color: Colors.redAccent),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            }),
+                                        TextButton(
+                                            child: Text(
+                                              "Yeah",
+                                            ),
+                                            onPressed: () {
+                                              _itemController
+                                                  .deleteIngredientFromIndex(
+                                                      index);
+                                              Navigator.of(context).pop();
+                                            })
+                                      ],
+                                    );
+                                  });
+                              },
+                            ),
                             onLongPress: () {
                               showDialog(
                                   context: context,
