@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:lottie/lottie.dart';
+import 'package:get/get.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -17,14 +18,13 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   void initState() {
-    _settingsController = new SettingsController();
+    _settingsController = Get.put(new SettingsController());
     _animationController = AnimationController(vsync: this);
     super.initState();
   }
 
   @override
   void dispose() {
-    _settingsController.dispose();
     _animationController.dispose();
     super.dispose();
   }
