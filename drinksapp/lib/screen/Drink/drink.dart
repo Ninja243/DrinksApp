@@ -1,6 +1,10 @@
-import 'dart:html';
+export "view/drink.dart"
 
-import 'package:flutter/material.dart';
+
+// import 'dart:html';
+
+
+// import 'package:flutter/material.dart';
 
 // class Drink extends StatefulWidget {
 //   @override
