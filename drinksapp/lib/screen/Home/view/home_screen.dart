@@ -1,5 +1,6 @@
 import 'package:drinksapp/screen/Ingredient/view/ingredient_screen.dart';
 import 'package:drinksapp/screen/Settings/view/settings_screen.dart';
+import 'package:drinksapp/screen/Drink/view/drink_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -89,7 +90,7 @@ class _HomeScreenState extends State<Home> {
       case 0:
         return IngredientScreen();
       case 1:
-        return Text('Drinks screen');
+        return DrinkScreen();
       default:
         return SettingsScreen();
     }

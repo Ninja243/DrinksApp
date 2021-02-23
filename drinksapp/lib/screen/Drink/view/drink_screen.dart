@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:drinksapp/models/drink.dart';
 import 'package:flutter/material.dart';
 import 'package:drinksapp/common/enums.dart';
@@ -8,19 +6,23 @@ import 'package:get/get.dart';
 
 class DrinkScreen extends StatefulWidget {
   @override
-  DrinkScreenState createState() => _DrinkScreenState();
+  _DrinkScreenState createState() => _DrinkScreenState();
 }
 
 class _DrinkScreenState extends State<DrinkScreen> {
-
-
-
-
-
-
-
-  Widget build(BuildContext context)
-  return Scaffold(
-    
-  )
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Text("Drinks Screen"),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            return AlertDialog(title: Text("Generate Drink"));
+          },
+        ));
+  }
 }
