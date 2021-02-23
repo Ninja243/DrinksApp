@@ -25,6 +25,8 @@ class _HomeScreenState extends State<Home> {
                 appBar: AppBar(
                     title: _currentIndex == 1
                         ? TextLiquidFill(
+                          
+                          loadUntil: 0.67,
                             text: 'Drinks',
                             loadDuration: Duration(seconds: 2),
                             waveColor: Colors.white,
@@ -37,6 +39,7 @@ class _HomeScreenState extends State<Home> {
                           )
                         : _currentIndex == 2
                             ? TextLiquidFill(
+                              loadUntil: 0.67,
                                 text: 'Settings',
                                 loadDuration: Duration(seconds: 2),
                                 waveColor: Colors.white,
@@ -48,6 +51,7 @@ class _HomeScreenState extends State<Home> {
                                 boxHeight: 200.0,
                               )
                             : TextLiquidFill(
+                              loadUntil: 0.67,
                                 text: 'Ingredients',
                                 loadDuration: Duration(seconds: 2),
                                 waveColor: Colors.white,
