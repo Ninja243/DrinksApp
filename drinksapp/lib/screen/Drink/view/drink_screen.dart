@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:drinksapp/common/enums.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
+import 'package:drinksapp/controller/drink_controller.dart';
+import 'package:expansion_card/expansion_card.dart';
+import 'package:drinksapp/controller/settings_controller.dart';
 
 class DrinkScreen extends StatefulWidget {
   @override
@@ -10,10 +13,29 @@ class DrinkScreen extends StatefulWidget {
 }
 
 class _DrinkScreenState extends State<DrinkScreen> {
+  DrinkController _drinkController;
+
+  TextEditingController _drinkNameController;
+  TextEditingController _drinkPercentageController;
+  TextEditingController _drinkAmountController;
+  double _drinkPercentage;
+
+  SettingsController _settingsController;
+
+  @override
+  void initState() {
+    super.initState();
+    _settingsController = Get.put(new SettingsController());
+    _drinkController = Get.put(new DrinkController());
+    _drinkPercentageController = TextEditingController();
+    _drinkAmountController = TextEditingController();
+    _drinkNameController = TextEditingController();
+    _drinkPercentage = 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Text("Drinks Screen"),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.blue,
           child: Icon(
@@ -23,6 +45,29 @@ class _DrinkScreenState extends State<DrinkScreen> {
           onPressed: () {
             return AlertDialog(title: Text("Generate Drink"));
           },
-        ));
+        ),
+        body: ListView.builder(itemBuilder: (BuildContext context, int index) {
+          return ExpansionCard(
+            title: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                      
+                    "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
+                    style: TextStyle(
+                      fontSize: 30,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    "Sub",
+                    style: TextStyle(fontSize: 20, color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }));
   }
 }

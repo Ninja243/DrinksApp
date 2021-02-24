@@ -1,8 +1,6 @@
-export "view/drink.dart"
-
+export "view/drink.dart";
 
 // import 'dart:html';
-
 
 // import 'package:flutter/material.dart';
 
