@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:drinksapp/config/size_config.dart';
 import 'package:drinksapp/config/app_theme.dart';
 import 'package:drinksapp/screen/Loading/Loading.dart';
+import 'package:flutter/services.dart';
 
 class MyApp extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyApp extends State<MyApp> {
   @override
-  void initState()  {
+  void initState() {
     super.initState();
   }
 
@@ -22,7 +23,10 @@ class _MyApp extends State<MyApp> {
     return LayoutBuilder(builder: (context, constraints) {
       return OrientationBuilder(builder: (context, orientation) {
         SizeConfig().init(constraints, orientation);
-
+        SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,

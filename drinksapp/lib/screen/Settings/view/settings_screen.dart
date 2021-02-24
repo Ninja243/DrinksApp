@@ -65,57 +65,95 @@ class _SettingsScreenState extends State<SettingsScreen>
               } else if (snapshot.hasData) {
                 return Obx(() {
                   return Scaffold(
-                      body: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return SwitchListTile(
-                          title: Text(_settingsController
-                              .getSetting(index)
-                              .getDescription()),
-                          subtitle: Text(
-                              _settingsController.getSetting(index).getID()),
-                          value:
-                              _settingsController.getSetting(index).getID() ==
-                                  _settingsController
-                                      .getActiveBehaviourType()
-                                      .toString()
-                                      .toLowerCase()
-                                      .substring(_settingsController
-                                              .getActiveBehaviourType()
-                                              .toString()
-                                              .indexOf(".") +
-                                          1),
-                          onChanged: (value) {
-                            if (value) {
-                              _settingsController.setActiveBehaviourType(
-                                  _settingsController
-                                      .convertStringToGeneratorBehaviourType(
-                                          _settingsController
-                                              .getSetting(index)
-                                              .getID()));
-                              _settingsController.update();
-                              setState(() {});
-                            } else {
-                              if (_settingsController
-                                      .getSetting(index)
-                                      .getID() ==
-                                  _settingsController
-                                      .getActiveBehaviourType()
-                                      .toString()
-                                      .toLowerCase()
-                                      .substring(_settingsController
-                                              .getActiveBehaviourType()
-                                              .toString()
-                                              .indexOf(".") +
-                                          1)) {
-                                _settingsController.setActiveBehaviourType(
-                                    GeneratorBehaviourType.DEFAULT);
-                                setState(() {});
-                              }
-                            }
-                          });
-                    },
-                    itemCount: _settingsController.length(),
-                  ));
+                      body: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                        FractionallySizedBox(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    if (_animationController.isCompleted) {
+                                      _animationController.reset();
+                                      _animationController.forward();
+                                    } else if (_animationController
+                                        .isAnimating) {
+                                      _animationController.reverse();
+                                    } else {
+                                      _animationController.forward();
+                                    }
+                                    
+                                  },
+                                  child: Lottie.asset("lib/assets/user.json",
+                                      height: 150,
+                                      width: 150,
+                                      controller: _animationController,onLoaded: (composition) {
+                                        _animationController.duration =
+                                            composition.duration;
+                                        //_animationController.repeat();
+                                      }))
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                            child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return SwitchListTile(
+                                title: Text(_settingsController
+                                    .getSetting(index)
+                                    .getDescription()),
+                                subtitle: Text(_settingsController
+                                    .getSetting(index)
+                                    .getID()),
+                                value: _settingsController
+                                        .getSetting(index)
+                                        .getID() ==
+                                    _settingsController
+                                        .getActiveBehaviourType()
+                                        .toString()
+                                        .toLowerCase()
+                                        .substring(_settingsController
+                                                .getActiveBehaviourType()
+                                                .toString()
+                                                .indexOf(".") +
+                                            1),
+                                onChanged: (value) {
+                                  if (value) {
+                                    _settingsController.setActiveBehaviourType(
+                                        _settingsController
+                                            .convertStringToGeneratorBehaviourType(
+                                                _settingsController
+                                                    .getSetting(index)
+                                                    .getID()));
+                                    _settingsController.update();
+                                    setState(() {});
+                                  } else {
+                                    if (_settingsController
+                                            .getSetting(index)
+                                            .getID() ==
+                                        _settingsController
+                                            .getActiveBehaviourType()
+                                            .toString()
+                                            .toLowerCase()
+                                            .substring(_settingsController
+                                                    .getActiveBehaviourType()
+                                                    .toString()
+                                                    .indexOf(".") +
+                                                1)) {
+                                      _settingsController
+                                          .setActiveBehaviourType(
+                                              GeneratorBehaviourType.DEFAULT);
+                                      setState(() {});
+                                    }
+                                  }
+                                });
+                          },
+                          itemCount: _settingsController.length(),
+                        ))
+                      ]));
                 });
               } else {
                 return Center(
