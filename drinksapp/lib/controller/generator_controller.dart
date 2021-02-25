@@ -21,7 +21,8 @@ class Generator {
     "Prost!",
     "Chin-Chin!",
     "здоровье! (Nastrovie!)",
-    "Auf X!"
+    "Auf X!",
+    "За Советский Союз! (Za Sovetskiy Soyuz!)"
   ];
   List<String> _unitPreparationMethods = [
     "shaking",
