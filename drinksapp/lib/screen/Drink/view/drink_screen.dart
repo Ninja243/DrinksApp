@@ -46,7 +46,7 @@ class _DrinkScreenState extends State<DrinkScreen> {
             return AlertDialog(title: Text("Generate Drink"));
           },
         ),
-        body: ListView.builder(itemBuilder: (BuildContext context, int index) {
+        body: ListView.builder(itemCount: _drinkController.getDrinks().length, itemBuilder: (BuildContext context, int index) {
           return ExpansionCard(
             title: Container(
               child: Column(
