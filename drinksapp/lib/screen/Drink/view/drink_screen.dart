@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
+
 import 'package:drinksapp/common/enums.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:drinksapp/controller/drink_controller.dart';
 import 'package:expansion_card/expansion_card.dart';
 import 'package:drinksapp/controller/settings_controller.dart';
-=======
->>>>>>> 740481040c57cc96026497ed753fc1c54a803e0c
 
 class DrinkScreen extends StatefulWidget {
   @override
@@ -55,7 +53,6 @@ class _DrinkScreenState extends State<DrinkScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                      
                     "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
                     style: TextStyle(
                       fontSize: 30,
