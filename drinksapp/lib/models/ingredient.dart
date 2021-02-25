@@ -1,5 +1,4 @@
 import 'package:drinksapp/common/enums.dart';
-import 'package:flutter/material.dart';
 
 class Ingredient {
   String name;

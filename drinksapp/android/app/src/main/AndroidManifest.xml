@@ -3,7 +3,7 @@
    <application
         android:label="drinksapp"
         android:icon="@mipmap/ic_launcher">
-        <activity
+    <activity android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"

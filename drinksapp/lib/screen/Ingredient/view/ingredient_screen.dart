@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:drinksapp/controller/settings_controller.dart';
 import 'package:drinksapp/models/ingredient.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:drinksapp/controller/ingredient_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:lottie/lottie.dart';
-import 'package:drinksapp/controller/storage_controller.dart';
 
 class IngredientScreen extends StatefulWidget {
   @override
