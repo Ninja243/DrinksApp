@@ -50,6 +50,21 @@ class IngredientController extends GetxController {
     prefs.setStringList("ingredients", l);
   }
 
+  Ingredient searchByName(String name) {
+    return this._ingredients.firstWhere(
+        (item) => item.name.toLowerCase().trim().contains(name.toLowerCase()));
+  }
+
+  Ingredient searchByPercentage(int max, int min) {
+    return this._ingredients.firstWhere(
+        (element) => element.percentage >= min && element.percentage <= max);
+  }
+
+  List<Ingredient> searchMultipleByPercentage(int max, int min) {
+    return this._ingredients.where(
+        (element) => element.percentage >= min && element.percentage <= max);
+  }
+
   setIngredients(List<Ingredient> i) {
     this._ingredients.assignAll(i);
     saveList();
