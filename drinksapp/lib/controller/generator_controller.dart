@@ -6,12 +6,32 @@ import 'package:drinksapp/models/drink.dart';
 import 'package:drinksapp/models/ingredient.dart';
 import "package:get/get.dart";
 
-class Generator {
+class DrinkGenerator {
   IngredientController _ingredientController;
   SettingsController _settingsController;
   DrinkController _drinkController;
   bool isReady = false;
   int _drinksGenerated = 0;
+  List<String> _colors = [
+    "Neon",
+    "Green",
+    "Black",
+    "Blue",
+    "Red",
+    "Pink",
+    "See-through",
+    "Oily"
+  ];
+  List<String> _places = ["Regensburg", "German", "Namibian", "Minnasota"];
+  List<String> _nouns = [
+    "Polisher",
+    "Shoe",
+    "Bag",
+    "Hammer",
+    "Drill",
+    "Brick",
+    "Banger"
+  ];
   List<String> _closingPhrases = [
     'Bon Appetit!',
     'Sauf mit Verantwortung!',
@@ -57,11 +77,12 @@ class Generator {
   int drinksGeneratedThisSession() => this._drinksGenerated;
 
   Future<bool> initWithFuture() {
-    Future.delayed(Duration(seconds: 0), () {
+    return Future.delayed(Duration(seconds: 3), () {
       this._ingredientController = Get.put(new IngredientController());
       this._settingsController = Get.put(new SettingsController());
       this._drinkController = Get.put(new DrinkController());
       this.isReady = true;
+      return true;
     });
   }
 
@@ -98,30 +119,37 @@ class Generator {
     return _unitAdditionMethods[0].capitalizeFirst +
         " the " +
         _unitPostPreparationMethods[0] +
-        i.name;
+        " " +
+        i.name +
+        " it into your glass.";
+  }
+
+  String generateDrinkName() {
+    _colors.shuffle();
+    _places.shuffle();
+    _nouns.shuffle();
+    return "The " + _colors[0] + " " + _places[0] + " " + _nouns[0];
   }
 
   generate() {
-    return Future.delayed(Duration(seconds: 0), () {
+    return Future.delayed(Duration(seconds: 5), () {
       GeneratorBehaviourType t = _settingsController.getActiveBehaviourType();
       Drink d = new Drink();
       int targetPercentage;
       int cupSizeMl = 330;
       int additiveUnit = 30; // ml, about one shot
       int currentDrinkAmount = 0;
-      bool failed = false;
       double currentPercentage = 0;
       if (_ingredientController.getIngredients().length <= 0) {
-        failed = true;
-        return failed;
+        throw ("I'll need more ingredients to mix you a drink!");
       }
+      print("before switch");
       switch (t) {
         case GeneratorBehaviourType.HUGO_ADVERT:
           targetPercentage = 7;
           Ingredient hugo = _ingredientController.searchByName("hugo");
           if (hugo == null) {
-            failed = true;
-            break;
+            throw ("Please add some Hugo");
           }
           d.i.add(hugo);
           List<Ingredient> pI = _ingredientController
@@ -213,8 +241,7 @@ class Generator {
             water = _ingredientController.searchByName("water");
           }
           if (water == null) {
-            failed = true;
-            break;
+            throw ("Please add some water");
           }
           d.i.add(water);
           int j = 0;
@@ -230,16 +257,40 @@ class Generator {
               "\nFinally, pour about two liters of water into a jug and check to see if the jug is full by pouring the contents of the jug onto the floor.";
           break;
         default:
+          print("Default");
           targetPercentage = 20;
+          List<Ingredient> pI = _ingredientController
+              .searchMultipleByPercentage(targetPercentage, 0);
+          List<Ingredient> uI = <Ingredient>[];
+          print("Default post search");
+          int j = 0;
+          while (currentPercentage <= targetPercentage &&
+              currentDrinkAmount <= cupSizeMl) {
+            pI.shuffle();
+            if (!uI.contains(pI[0])) {
+              uI.add(pI[0]);
+            }
+            d.recipe = d.recipe + "\n" + generateTextForRecipe(pI[0], j);
+            j = j + 1;
+            currentDrinkAmount = (j + 1) * additiveUnit;
+            currentPercentage =
+                currentPercentage + (additiveUnit * pI[0].percentage / 100);
+          }
+          print("Default after while");
+          d.i.addAll(uI);
+          print("Default after adding");
+          break;
       }
-      if (failed) {
-        return failed;
-      }
+      print("6");
       _closingPhrases.shuffle();
       d.recipe = d.recipe + "\n\n" + _closingPhrases[0];
-      d.recipe = d.recipe + _drinkController.addDrink(d);
+      d.name = generateDrinkName();
+      d.percentage = currentPercentage.toInt();
+      print("added percentage");
+      _drinkController.addDrink(d);
       this._drinksGenerated = this._drinksGenerated + 1;
-      return failed;
+      print("dg++");
+      return d;
     });
   }
 }

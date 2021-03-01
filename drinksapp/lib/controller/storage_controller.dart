@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 class StorageController extends ChangeNotifier {
-  var _box;
+  Box _box;
   bool isReady = false;
 
   StorageController() {

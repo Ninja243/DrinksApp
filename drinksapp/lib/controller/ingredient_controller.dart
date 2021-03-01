@@ -17,9 +17,9 @@ class IngredientController extends GetxController {
   init() async {
     if (this._ready == false) {
       prefs = await SharedPreferences.getInstance();
-      var list = prefs.getStringList("ingredients");
+      List<String> list = prefs.getStringList("ingredients");
       if (list != null) {
-        for (var i in list) {
+        for (String i in list) {
           _ingredients.add(new Ingredient.fromJson(jsonDecode(i)));
         }
       }
@@ -31,9 +31,9 @@ class IngredientController extends GetxController {
       Future.delayed(Duration(seconds: 0), () async {
         if (this._ready == false) {
           prefs = await SharedPreferences.getInstance();
-          var list = prefs.getStringList("ingredients");
+          List<String> list = prefs.getStringList("ingredients");
           if (list != null) {
-            for (var i in list) {
+            for (String i in list) {
               _ingredients.add(new Ingredient.fromJson(json.decode(i)));
             }
           }
@@ -61,8 +61,11 @@ class IngredientController extends GetxController {
   }
 
   List<Ingredient> searchMultipleByPercentage(int max, int min) {
-    return this._ingredients.where(
+    Iterable<Ingredient> x = this._ingredients.where(
         (element) => element.percentage >= min && element.percentage <= max);
+    List<Ingredient> l = <Ingredient>[];
+    l.addAll(x);
+    return l;
   }
 
   setIngredients(List<Ingredient> i) {

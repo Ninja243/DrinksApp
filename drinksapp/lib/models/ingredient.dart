@@ -12,7 +12,7 @@ class Ingredient {
     this.amountAvailable = amountAvailable;
     this.itype = this.percentage > 20
         ? IngredientType.STRONG_ALCOHOLIC_DRINK
-        : this.percentage > 4
+        : this.percentage > 1
             ? IngredientType.WEAK_ALCOHOLIC_DRINK
             : IngredientType.NON_ALCOHOLIC_DRINK;
   }

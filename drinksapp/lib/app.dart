@@ -1,3 +1,4 @@
+import 'package:drinksapp/screen/DrinkDetails/view/details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,10 +25,13 @@ class _MyApp extends State<MyApp> {
       return OrientationBuilder(builder: (context, orientation) {
         SizeConfig().init(constraints, orientation);
         SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown,
-      ]);
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown,
+        ]);
         return GetMaterialApp(
+          routes: {
+            DrinkDetails.routeName: (context) => DrinkDetails(),
+          },
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
           home: LoadingScreen(),

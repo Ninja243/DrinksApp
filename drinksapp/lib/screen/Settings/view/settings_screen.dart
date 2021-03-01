@@ -37,6 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             future: _settingsController.initWithFuture(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
+                snapshot.error.printError();
                 return Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
