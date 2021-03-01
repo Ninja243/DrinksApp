@@ -1,6 +1,8 @@
 import 'package:drinksapp/controller/generator_controller.dart';
 import 'package:drinksapp/controller/ingredient_controller.dart';
 import 'package:drinksapp/models/drink.dart';
+import 'package:drinksapp/models/drink_text.dart';
+import 'package:drinksapp/screen/DrinkDetails/view/details.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
@@ -154,22 +156,46 @@ class _DrinkScreenState extends State<DrinkScreen>
                                 } else {
                                   if (snapshot.hasData) {
                                     Drink t = snapshot.data;
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          t.name,
-                                          style: TextStyle(
-                                              fontSize: 70.0,
-                                              fontFamily: "Canterbury"),
-                                        ),
-                                        Text(t.generateIngredientString()),
-                                        Text(t.recipe)
-                                      ],
-                                    );
+                                    Future.delayed(Duration.zero, () {
+                                      Navigator.pushNamed(
+                                          context, DrinkDetails.routeName,
+                                          arguments:
+                                              DrinkText(t.name, t.generateIngredientString(), t.recipe));
+                                    });
+                                    this._displayingDrink = false;
+                                    return Align(
+            alignment: Alignment.topCenter,
+            child: ListView.builder(
+                                      reverse: true,
+                                      shrinkWrap: true,
+                                        itemCount:
+                                            _drinkController.getDrinks().length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return ExpansionCard(
+                                            title: Container(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Text(
+                                                    "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
+                                                    style: TextStyle(
+                                                      fontSize: 30,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "Sub",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        color: Colors.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }));
                                   } else {
                                     return Center(
                                         child: Column(
@@ -270,7 +296,11 @@ class _DrinkScreenState extends State<DrinkScreen>
               setState(() {});
             },
           ),
-          body: ListView.builder(
+          body: Align(
+            alignment: Alignment.topCenter,
+            child: ListView.builder(
+            reverse: true,
+            shrinkWrap: true,
               itemCount: _drinkController.getDrinks().length,
               itemBuilder: (BuildContext context, int index) {
                 return ExpansionCard(
@@ -293,7 +323,7 @@ class _DrinkScreenState extends State<DrinkScreen>
                     ),
                   ),
                 );
-              }));
+              })));
     }
   }
 }
