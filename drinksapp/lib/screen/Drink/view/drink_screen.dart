@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:drinksapp/controller/drink_controller.dart';
 import 'package:expansion_card/expansion_card.dart';
 import 'package:lottie/lottie.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 
 class DrinkScreen extends StatefulWidget {
   @override
@@ -21,6 +23,7 @@ class _DrinkScreenState extends State<DrinkScreen>
   DrinkController _drinkController;
   DrinkGenerator _drinkGenerator;
   AnimationController _animationController;
+  bool _connectedToInternet;
 
   @override
   void dispose() {
@@ -37,6 +40,20 @@ class _DrinkScreenState extends State<DrinkScreen>
     _drinkController = Get.put(new DrinkController());
     _drinkGenerator = Get.put(new DrinkGenerator());
     _animationController = AnimationController(vsync: this);
+    try {
+      InternetAddress.lookup('google.com').then((res) {
+        if (res.isNotEmpty && res[0].rawAddress.isNotEmpty) {
+          this._connectedToInternet = true;
+        }
+      }).catchError((error) {
+        if (!(error is SocketException)) {
+          print(error.toString());
+        }
+        this._connectedToInternet = false;
+      });
+    } on SocketException catch (_) {
+      this._connectedToInternet = false;
+    }
   }
 
   @override
@@ -118,85 +135,12 @@ class _DrinkScreenState extends State<DrinkScreen>
                           ));
                         } else {
                           if (snapshot.hasData) {
-                            return FutureBuilder(
-                              future: _drinkGenerator.generate(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasError) {
-                                  snapshot.error.printError();
-                                  return Center(
-                                      child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: Lottie.asset(
-                                                'lib/assets/error.json',
-                                                controller:
-                                                    _animationController,
-                                                onLoaded: (composition) {
-                                              _animationController.duration =
-                                                  composition.duration;
-                                              _animationController.repeat();
-                                            }),
-                                          )
-                                        ],
-                                      ),
-                                      Text(snapshot.error.toString())
-                                      //Text("Nothing's here yet!")
-                                    ],
-                                  ));
-                                } else {
-                                  if (snapshot.hasData) {
-                                    Drink t = snapshot.data;
-                                    Future.delayed(Duration.zero, () {
-                                      Navigator.pushNamed(
-                                          context, DrinkDetails.routeName,
-                                          arguments:
-                                              DrinkText(t.name, t.generateIngredientString(), t.recipe));
-                                    });
-                                    this._displayingDrink = false;
-                                    return Align(
-            alignment: Alignment.topCenter,
-            child: ListView.builder(
-                                      reverse: true,
-                                      shrinkWrap: true,
-                                        itemCount:
-                                            _drinkController.getDrinks().length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return ExpansionCard(
-                                            title: Container(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: <Widget>[
-                                                  Text(
-                                                    "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
-                                                    style: TextStyle(
-                                                      fontSize: 30,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "Sub",
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        color: Colors.black),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        }));
-                                  } else {
+                            if (_connectedToInternet) {
+                              return FutureBuilder(
+                                future: _drinkGenerator.steal(http.Client()),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    snapshot.error.printError();
                                     return Center(
                                         child: Column(
                                       mainAxisAlignment:
@@ -205,11 +149,15 @@ class _DrinkScreenState extends State<DrinkScreen>
                                           CrossAxisAlignment.center,
                                       children: [
                                         Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Expanded(
                                               flex: 1,
                                               child: Lottie.asset(
-                                                  'lib/assets/loading.json',
+                                                  'lib/assets/error.json',
                                                   controller:
                                                       _animationController,
                                                   onLoaded: (composition) {
@@ -220,14 +168,212 @@ class _DrinkScreenState extends State<DrinkScreen>
                                             )
                                           ],
                                         ),
-                                        Text(
-                                            "Beep boop, I'm putting toes in your soup...")
+                                        Text(snapshot.error.toString())
+                                        //Text("Nothing's here yet!")
                                       ],
                                     ));
+                                  } else {
+                                    if (snapshot.hasData) {
+                                      Drink t = snapshot.data;
+                                      Future.delayed(Duration.zero, () {
+                                        Navigator.pushNamed(
+                                            context, DrinkDetails.routeName,
+                                            arguments: DrinkText(
+                                                t.name,
+                                                t.generateIngredientString(),
+                                                t.recipe));
+                                      });
+                                      this._displayingDrink = false;
+                                      return Align(
+                                          alignment: Alignment.topCenter,
+                                          child: ListView.builder(
+                                              reverse: true,
+                                              shrinkWrap: true,
+                                              itemCount: _drinkController
+                                                  .getDrinks()
+                                                  .length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ExpansionCard(
+                                                  title: Container(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
+                                                          style: TextStyle(
+                                                            fontSize: 30,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Sub",
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }));
+                                    } else {
+                                      return Center(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: Lottie.asset(
+                                                    'lib/assets/loading.json',
+                                                    controller:
+                                                        _animationController,
+                                                    onLoaded: (composition) {
+                                                  _animationController
+                                                          .duration =
+                                                      composition.duration;
+                                                  _animationController.repeat();
+                                                }),
+                                              )
+                                            ],
+                                          ),
+                                          Text(
+                                              "Beep boop, I'm putting toes in your soup...")
+                                        ],
+                                      ));
+                                    }
                                   }
-                                }
-                              },
-                            );
+                                },
+                              );
+                            } else {
+                              return FutureBuilder(
+                                future: _drinkGenerator.generate(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    snapshot.error.printError();
+                                    return Center(
+                                        child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Lottie.asset(
+                                                  'lib/assets/error.json',
+                                                  controller:
+                                                      _animationController,
+                                                  onLoaded: (composition) {
+                                                _animationController.duration =
+                                                    composition.duration;
+                                                _animationController.repeat();
+                                              }),
+                                            )
+                                          ],
+                                        ),
+                                        Text(snapshot.error.toString())
+                                        //Text("Nothing's here yet!")
+                                      ],
+                                    ));
+                                  } else {
+                                    if (snapshot.hasData) {
+                                      Drink t = snapshot.data;
+                                      Future.delayed(Duration.zero, () {
+                                        Navigator.pushNamed(
+                                            context, DrinkDetails.routeName,
+                                            arguments: DrinkText(
+                                                t.name,
+                                                t.generateIngredientString(),
+                                                t.recipe));
+                                      });
+                                      this._displayingDrink = false;
+                                      return Align(
+                                          alignment: Alignment.topCenter,
+                                          child: ListView.builder(
+                                              reverse: true,
+                                              shrinkWrap: true,
+                                              itemCount: _drinkController
+                                                  .getDrinks()
+                                                  .length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ExpansionCard(
+                                                  title: Container(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: <Widget>[
+                                                        Text(
+                                                          "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
+                                                          style: TextStyle(
+                                                            fontSize: 30,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          "Sub",
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              color:
+                                                                  Colors.black),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              }));
+                                    } else {
+                                      return Center(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: Lottie.asset(
+                                                    'lib/assets/loading.json',
+                                                    controller:
+                                                        _animationController,
+                                                    onLoaded: (composition) {
+                                                  _animationController
+                                                          .duration =
+                                                      composition.duration;
+                                                  _animationController.repeat();
+                                                }),
+                                              )
+                                            ],
+                                          ),
+                                          Text(
+                                              "Beep boop, I'm putting toes in your soup...")
+                                        ],
+                                      ));
+                                    }
+                                  }
+                                },
+                              );
+                            }
                           } else {
                             return Center(
                                 child: Column(
@@ -296,34 +442,149 @@ class _DrinkScreenState extends State<DrinkScreen>
               setState(() {});
             },
           ),
-          body: Align(
-            alignment: Alignment.topCenter,
-            child: ListView.builder(
-            reverse: true,
-            shrinkWrap: true,
-              itemCount: _drinkController.getDrinks().length,
-              itemBuilder: (BuildContext context, int index) {
-                return ExpansionCard(
-                  title: Container(
+          body: FutureBuilder(
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                snapshot.error.printError();
+                return Center(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: Colors.black,
-                          ),
-                        ),
-                        Text(
-                          "Sub",
-                          style: TextStyle(fontSize: 20, color: Colors.black),
-                        ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Lottie.asset('lib/assets/error.json',
+                              controller: _animationController,
+                              onLoaded: (composition) {
+                            _animationController.duration =
+                                composition.duration;
+                            _animationController.repeat();
+                          }),
+                        )
                       ],
                     ),
-                  ),
+                    Text(snapshot.error.toString())
+                    //Text("Nothing's here yet!")
+                  ],
+                ));
+              } else if (snapshot.hasData) {
+                return FutureBuilder(
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      snapshot.error.printError();
+                return Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Lottie.asset('lib/assets/error.json',
+                              controller: _animationController,
+                              onLoaded: (composition) {
+                            _animationController.duration =
+                                composition.duration;
+                            _animationController.repeat();
+                          }),
+                        )
+                      ],
+                    ),
+                    Text(snapshot.error.toString())
+                    //Text("Nothing's here yet!")
+                  ],
+                ));
+                    } else if (snapshot.hasData) {
+                      return Align(
+                    alignment: Alignment.topCenter,
+                    child: ListView.builder(
+                        reverse: true,
+                        shrinkWrap: true,
+                        itemCount: _drinkController.getDrinks().length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ExpansionCard(
+                            title: Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
+                                    style: TextStyle(
+                                      fontSize: 30,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Sub",
+                                    style: TextStyle(
+                                        fontSize: 20, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }));
+                    } else {
+                      return Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Lottie.asset('lib/assets/loading.json',
+                              controller: _animationController,
+                              onLoaded: (composition) {
+                            _animationController.duration =
+                                composition.duration;
+                            _animationController.repeat();
+                          }),
+                        )
+                      ],
+                    ),
+                    Text("Getting ingrediboos...")
+                  ],
+                ));
+                    }
+                  },
+                  future: _ingredientController.initWithFuture(),
                 );
-              })));
+              } else {
+                return Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Lottie.asset('lib/assets/loading.json',
+                              controller: _animationController,
+                              onLoaded: (composition) {
+                            _animationController.duration =
+                                composition.duration;
+                            _animationController.repeat();
+                          }),
+                        )
+                      ],
+                    ),
+                    Text("Getting dranks...")
+                  ],
+                ));
+              }
+            },
+            future: _drinkController.initWithFuture(),
+          ));
     }
   }
 }
