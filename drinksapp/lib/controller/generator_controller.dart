@@ -81,7 +81,7 @@ class DrinkGenerator {
   int drinksGeneratedThisSession() => this._drinksGenerated;
 
   Future<bool> initWithFuture() {
-    return Future.delayed(Duration(seconds: 3), () {
+    return Future.delayed(Duration(seconds: 0), () {
       this._ingredientController = Get.put(new IngredientController());
       this._settingsController = Get.put(new SettingsController());
       this._drinkController = Get.put(new DrinkController());
@@ -136,7 +136,7 @@ class DrinkGenerator {
   }
 
   Future<Drink> steal(http.Client client) {
-    return Future.delayed(Duration(seconds: 2), () {
+    return Future.delayed(Duration(seconds: 2), () async {
       Drink d = new Drink();
       if (_ingredientController.getIngredients().length <= 0) {
         throw ("I'll need more ingredients to mix you a drink!");
@@ -167,56 +167,40 @@ class DrinkGenerator {
       RecipeGPTRequest r = new RecipeGPTRequest(
           direction: [], title: [d.name], ingredient: iNames, top_k: 0);
       // Send to kind people
-      client.post("https://recipegpt.org/process",
-          body: utf8.encode(jsonEncode(r.toJson())),
-          //headers: <String, String>{
-          //  "Accept": "application/json, text/javascript, */*; q=0.01",
-          //  "Accept-Encoding": "gzip, deflate, br", // TODO weird
-          //  "Accept-Language": "en-US,en;q=0.5",
-          //  "Cache-Control": "no-cache",
-          //  "Connection": "keep-alive",
-          //  "Content-Type": "application/json;charset=UTF-8",
-          //  "Cookie":
-          //      "userEmail=anon-698521188109.3578; lc266_userID=anon-1615148609310; lc266_groupID=339; lc266_sessionID=-2", // TODO nonce?
-          //  "DNT": "1",
-          //  "Host": "https://recipegpt.org",
-          //  "Pragma": "no-cache",
-          //  "Referer": "https://recipegpt.org",
-          //  "User-Agent":
-          //      "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0",
-          //  "X-Requested-With": "XMLHttpRequest",
-          //  "Content-Length": "${utf8.encode(jsonEncode(r.toJson())).length}"
-          //}
-          headers: <String, String>{
-            "User-Agent":
-                "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0",
-            "Accept": "application/json, text/javascript, */*; q=0.01",
-            "Accept-Language": "en-US,en;q=0.5",
-            "Content-Type": "application/json;charset=UTF-8",
-            "X-Requested-With": "XMLHttpRequest",
-            "Pragma": "no-cache",
-            "Cache-Control": "no-cache",
-            "Referrer": "https://recipegpt.org/"
-          }).then((z) {
-        if (z.statusCode == 200) {
+      try {
+        var result = await client.post("https://recipegpt.org/process",
+            body: utf8.encode(jsonEncode(r.toJson())),
+            headers: <String, String>{
+              "User-Agent":
+                  "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0",
+              "Accept": "application/json, text/javascript, */*; q=0.01",
+              "Accept-Language": "en-US,en;q=0.5",
+              "Content-Type": "application/json;charset=UTF-8",
+              "X-Requested-With": "XMLHttpRequest",
+              "Pragma": "no-cache",
+              "Cache-Control": "no-cache",
+              "Referrer": "https://recipegpt.org/"
+            });
+
+        if (result.statusCode == 200) {
           RecipeGPTResponse r2 =
-              new RecipeGPTResponse.fromJson(jsonDecode(z.body));
+              new RecipeGPTResponse.fromJson(jsonDecode(result.body));
           d.recipe = r2.prompt;
           //d.recipe = d.recipe + "\n\n" + _closingPhrases[0];
           print(d.toJson().toString());
+          return d;
         } else {
           print("Error chatting to RecipeGPT");
-          print(z.reasonPhrase);
-          print(z.body);
-          print(z.headers);
+          print(result.reasonPhrase);
+          print(result.body);
+          print(result.headers);
           print("Request");
-          print(z.request.headers);
+          print(result.request.headers);
         }
-      }).catchError((e) async {
-        print(e);
+      } catch (e) {
         d = await this.generate();
-      });
-      return d;
+        return d;
+      }
     });
   }
 
