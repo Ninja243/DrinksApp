@@ -32,7 +32,7 @@ class DrinkDetails extends StatelessWidget {
     return Scaffold(
         body: Center(child:Container(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Column(children: [
+            child: ListView(shrinkWrap: true,children: [
               Container(padding: EdgeInsets.fromLTRB(0, 0, 0, 40),child:ProgressiveImage(
 
                 placeholder: AssetImage('lib/assets/cocktail.png'),

@@ -9,6 +9,7 @@ import 'package:drinksapp/models/ingredient.dart';
 import 'package:drinksapp/models/recipeGPT_message.dart';
 import "package:get/get.dart";
 import 'package:http/http.dart' as http;
+import 'package:requests/requests.dart';
 
 class DrinkGenerator {
   IngredientController _ingredientController;
@@ -125,7 +126,7 @@ class DrinkGenerator {
         _unitPostPreparationMethods[0] +
         " " +
         i.name +
-        " it into your glass.";
+        " into your glass.";
   }
 
   String generateDrinkName() {
@@ -256,8 +257,9 @@ class DrinkGenerator {
           direction: [], title: [d.name], ingredient: iNames, top_k: 0);
       // Send to kind people
       try {
-        var result = await client.post("https://recipegpt.org/process",
-            body: utf8.encode(jsonEncode(r.toJson())),
+        var result = await Requests.post("https://recipegpt.org/process",
+            body: jsonEncode(r.toJson()),
+            bodyEncoding: RequestBodyEncoding.JSON,
             headers: <String, String>{
               "User-Agent":
                   "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:85.0) Gecko/20100101 Firefox/85.0",
@@ -271,29 +273,31 @@ class DrinkGenerator {
             });
 
         if (result.statusCode == 200) {
-          RecipeGPTResponse r2 =
-              new RecipeGPTResponse.fromJson(jsonDecode(result.body));
+          RecipeGPTResponse r2 = new RecipeGPTResponse.fromJson(result.json());
           d.recipe = r2.prompt;
           if (_settingsController.getActiveBehaviourType() ==
               GeneratorBehaviourType.WATER_ONLY) {
-                d.recipe = d.recipe + "\n\n" + "P.S. Don't forget to check if a jug is full of water by pouring it's contents onto a counter!";
-              }
+            d.recipe = d.recipe +
+                "\n\n" +
+                "PS: Don't forget to check if a jug is full of water by pouring it's contents onto a counter!";
+          }
           //d.recipe = d.recipe + "\n\n" + _closingPhrases[0];
           // print(d.toJson().toString());
           _drinkController.addDrink(d);
           this._drinksGenerated = this._drinksGenerated + 1;
+          client.close();
           return d;
         } else {
           print("Error chatting to RecipeGPT");
-          print(result.reasonPhrase);
-          print(result.body);
+          print(result.statusCode);
+          print(result.content());
           print(result.headers);
-          print("Request");
-          print(result.request.headers);
+          throw ("Error chatting to RecipeGPT");
         }
       } catch (e) {
         print(e.toString());
         d = await this.generate();
+        client.close();
         return d;
       }
     });
@@ -329,7 +333,7 @@ class DrinkGenerator {
             if (!uI.contains(pI[0])) {
               uI.add(pI[0]);
             }
-            d.recipe = d.recipe + "\n" + generateTextForRecipe(pI[0], j);
+            d.recipe = d.recipe + generateTextForRecipe(pI[0], j);
             j = j + 1;
             currentDrinkAmount = (j + 1) * additiveUnit;
             currentPercentage =
@@ -352,7 +356,7 @@ class DrinkGenerator {
             if (!uI.contains(pI[0])) {
               uI.add(pI[0]);
             }
-            d.recipe = d.recipe + "\n" + generateTextForRecipe(pI[0], j);
+            d.recipe = d.recipe + generateTextForRecipe(pI[0], j);
             j = j + 1;
             currentDrinkAmount = (j + 1) * additiveUnit;
             currentPercentage =
@@ -372,7 +376,7 @@ class DrinkGenerator {
             if (!uI.contains(pI[0])) {
               uI.add(pI[0]);
             }
-            d.recipe = d.recipe + "\n" + generateTextForRecipe(pI[0], j);
+            d.recipe = d.recipe + generateTextForRecipe(pI[0], j);
             j = j + 1;
             currentDrinkAmount = (j + 1) * additiveUnit;
             currentPercentage =
@@ -393,7 +397,7 @@ class DrinkGenerator {
             if (!uI.contains(pI[0])) {
               uI.add(pI[0]);
             }
-            d.recipe = d.recipe + "\n" + generateTextForRecipe(pI[0], j);
+            d.recipe = d.recipe + generateTextForRecipe(pI[0], j);
             j = j + 1;
             currentDrinkAmount = (j + 1) * additiveUnit;
             currentPercentage =
@@ -414,7 +418,7 @@ class DrinkGenerator {
           int j = 0;
           while (currentPercentage <= targetPercentage &&
               currentDrinkAmount <= cupSizeMl) {
-            d.recipe = d.recipe + "\n" + generateTextForRecipe(water, j);
+            d.recipe = d.recipe + generateTextForRecipe(water, j);
             j = j + 1;
             currentDrinkAmount = (j + 1) * additiveUnit;
             currentPercentage =
@@ -435,7 +439,7 @@ class DrinkGenerator {
             if (!uI.contains(pI[0])) {
               uI.add(pI[0]);
             }
-            d.recipe = d.recipe + "\n" + generateTextForRecipe(pI[0], j);
+            d.recipe = d.recipe + generateTextForRecipe(pI[0], j);
             j = j + 1;
             currentDrinkAmount = (j + 1) * additiveUnit;
             currentPercentage =

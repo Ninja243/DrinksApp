@@ -37,6 +37,7 @@ dependencies:
   expansion_card:
   progressive_image: 
   flutter_siri_suggestions:
+  requests:
 
 
   # The following adds the Cupertino Icons font to your application.
