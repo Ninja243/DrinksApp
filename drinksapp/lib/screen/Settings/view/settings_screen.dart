@@ -88,6 +88,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                                     }
                                     
                                   },
+                                  onLongPress: () {
+                                    // Are you sure you want to delete all drinks
+                                  },
                                   child: Lottie.asset("lib/assets/user.json",
                                       height: 150,
                                       width: 150,

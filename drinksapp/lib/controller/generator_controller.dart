@@ -138,7 +138,7 @@ class DrinkGenerator {
   String generateDrinkNameWithIngredients(List<Ingredient> i) {
     i.shuffle();
     _colors.shuffle();
-    return "The " + _colors[0]+" "+i[0].name;
+    return "The " + _colors[0] + " " + i[0].name;
   }
 
   Future<Drink> steal(http.Client client) {
@@ -170,7 +170,11 @@ class DrinkGenerator {
       }
       d.i = ui;
       d.name = generateDrinkNameWithIngredients(ui);
-      d.percentage = -1; // TODO VERY BAD
+      d.percentage = 0; // TODO VERY BAD
+      for (Ingredient z in d.i) {
+        d.percentage = (d.percentage + z.percentage).toInt();
+      }
+      d.percentage = d.percentage ~/ d.i.length;
       RecipeGPTRequest r = new RecipeGPTRequest(
           direction: [], title: [d.name], ingredient: iNames, top_k: 0);
       // Send to kind people
@@ -194,11 +198,10 @@ class DrinkGenerator {
               new RecipeGPTResponse.fromJson(jsonDecode(result.body));
           d.recipe = r2.prompt;
           //d.recipe = d.recipe + "\n\n" + _closingPhrases[0];
-         // print(d.toJson().toString());
+          // print(d.toJson().toString());
           _drinkController.addDrink(d);
-      this._drinksGenerated = this._drinksGenerated + 1;
+          this._drinksGenerated = this._drinksGenerated + 1;
           return d;
-
         } else {
           print("Error chatting to RecipeGPT");
           print(result.reasonPhrase);
@@ -208,6 +211,7 @@ class DrinkGenerator {
           print(result.request.headers);
         }
       } catch (e) {
+        print(e.toString());
         d = await this.generate();
         return d;
       }

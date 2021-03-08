@@ -35,6 +35,8 @@ dependencies:
   shared_preferences:
   animated_text_kit:
   expansion_card:
+  progressive_image: 
+  flutter_siri_suggestions:
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -63,6 +65,8 @@ flutter:
   - "lib/assets/user.json"
   - "lib/assets/error.json"
   - "lib/assets/baby.json"
+  - "lib/assets/arrow.json"
+  - "lib/assets/cocktail.png"
   fonts:
    - family: Canterbury
      fonts:

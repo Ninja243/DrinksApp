@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:get/get.dart';
 import 'package:drinksapp/controller/drink_controller.dart';
-import 'package:expansion_card/expansion_card.dart';
 import 'package:lottie/lottie.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
@@ -181,7 +180,8 @@ class _DrinkScreenState extends State<DrinkScreen>
                                             arguments: DrinkText(
                                                 t.name,
                                                 t.generateIngredientString(),
-                                                t.recipe));
+                                                t.recipe,
+                                                t.percentage));
                                       });
                                       this._displayingDrink = false;
                                       return Align(
@@ -195,30 +195,41 @@ class _DrinkScreenState extends State<DrinkScreen>
                                               itemBuilder:
                                                   (BuildContext context,
                                                       int index) {
-                                                return ExpansionCard(
-                                                  title: Container(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
-                                                          style: TextStyle(
-                                                            fontSize: 30,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          "Sub",
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                Drink t = _drinkController
+                                                    .getDrink(index);
+                                                return ListTile(
+                                                  autofocus: true,
+                                                  leading: Icon(
+                                                      FlutterIcons.drink_ent,
+                                                      color: t.percentage > 35
+                                                          ? Colors.red
+                                                          : t.percentage > 0
+                                                              ? Colors.amber
+                                                              : Colors.grey),
+                                                  title: Text(
+                                                      "${t.name} (${t.percentage}%)",
+                                                      style: TextStyle(
+                                                          color: t.percentage >
+                                                                  35
+                                                              ? Colors.red
+                                                              : t.percentage > 0
+                                                                  ? Colors.amber
+                                                                  : Colors
+                                                                      .black)),
+                                                  onTap: () {
+                                                    Future.delayed(
+                                                        Duration.zero, () {
+                                                      Navigator.pushNamed(
+                                                          context,
+                                                          DrinkDetails
+                                                              .routeName,
+                                                          arguments: DrinkText(
+                                                              t.name,
+                                                              t.generateIngredientString(),
+                                                              t.recipe,
+                                                              t.percentage));
+                                                    });
+                                                  },
                                                 );
                                               }));
                                     } else {
@@ -300,7 +311,8 @@ class _DrinkScreenState extends State<DrinkScreen>
                                             arguments: DrinkText(
                                                 t.name,
                                                 t.generateIngredientString(),
-                                                t.recipe));
+                                                t.recipe,
+                                                t.percentage));
                                       });
                                       this._displayingDrink = false;
                                       return Align(
@@ -314,30 +326,41 @@ class _DrinkScreenState extends State<DrinkScreen>
                                               itemBuilder:
                                                   (BuildContext context,
                                                       int index) {
-                                                return ExpansionCard(
-                                                  title: Container(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
-                                                          style: TextStyle(
-                                                            fontSize: 30,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          "Sub",
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
+                                                Drink t = _drinkController
+                                                    .getDrink(index);
+                                                return ListTile(
+                                                  autofocus: true,
+                                                  leading: Icon(
+                                                      FlutterIcons.drink_ent,
+                                                      color: t.percentage > 35
+                                                          ? Colors.red
+                                                          : t.percentage > 0
+                                                              ? Colors.amber
+                                                              : Colors.grey),
+                                                  title: Text(
+                                                      "${t.name} (${t.percentage}%)",
+                                                      style: TextStyle(
+                                                          color: t.percentage >
+                                                                  35
+                                                              ? Colors.red
+                                                              : t.percentage > 0
+                                                                  ? Colors.amber
+                                                                  : Colors
+                                                                      .black)),
+                                                  onTap: () {
+                                                    Future.delayed(
+                                                        Duration.zero, () {
+                                                      Navigator.pushNamed(
+                                                          context,
+                                                          DrinkDetails
+                                                              .routeName,
+                                                          arguments: DrinkText(
+                                                              t.name,
+                                                              t.generateIngredientString(),
+                                                              t.recipe,
+                                                              t.percentage));
+                                                    });
+                                                  },
                                                 );
                                               }));
                                     } else {
@@ -476,84 +499,118 @@ class _DrinkScreenState extends State<DrinkScreen>
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       snapshot.error.printError();
-                return Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Lottie.asset('lib/assets/error.json',
-                              controller: _animationController,
-                              onLoaded: (composition) {
-                            _animationController.duration =
-                                composition.duration;
-                            _animationController.repeat();
-                          }),
-                        )
-                      ],
-                    ),
-                    Text(snapshot.error.toString())
-                    //Text("Nothing's here yet!")
-                  ],
-                ));
+                      return Center(
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Lottie.asset('lib/assets/error.json',
+                                    controller: _animationController,
+                                    onLoaded: (composition) {
+                                  _animationController.duration =
+                                      composition.duration;
+                                  _animationController.repeat();
+                                }),
+                              )
+                            ],
+                          ),
+                          Text(snapshot.error.toString())
+                          //Text("Nothing's here yet!")
+                        ],
+                      ));
                     } else if (snapshot.hasData) {
-                      return Align(
-                    alignment: Alignment.topCenter,
-                    child: ListView.builder(
-                        reverse: true,
-                        shrinkWrap: true,
-                        itemCount: _drinkController.getDrinks().length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ExpansionCard(
-                            title: Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    "${_drinkController.getDrink(index).name} (${_drinkController.getDrink(index).percentage}%)",
-                                    style: TextStyle(
-                                      fontSize: 30,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Sub",
-                                    style: TextStyle(
-                                        fontSize: 20, color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }));
+                      return _drinkController.getDrinks().length > 0
+                          ? Align(
+                              alignment: Alignment.topCenter,
+                              child: ListView.builder(
+                                  reverse: true,
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      _drinkController.getDrinks().length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    Drink t = _drinkController.getDrink(index);
+                                    return ListTile(
+                                      autofocus: true,
+                                      leading: Icon(FlutterIcons.drink_ent,
+                                          color: t.percentage > 35
+                                              ? Colors.red
+                                              : t.percentage > 0
+                                                  ? Colors.amber
+                                                  : Colors.grey),
+                                      title:
+                                          Text("${t.name} (${t.percentage}%)",
+                                              style: TextStyle(
+                                                  color: t.percentage > 35
+                                                      ? Colors.red
+                                                      : t.percentage > 0
+                                                          ? Colors.amber
+                                                          : Colors.black)),
+                                      onTap: () {
+                                        Future.delayed(Duration.zero, () {
+                                          Navigator.pushNamed(
+                                              context, DrinkDetails.routeName,
+                                              arguments: DrinkText(
+                                                  t.name,
+                                                  t.generateIngredientString(),
+                                                  t.recipe,
+                                                  t.percentage));
+                                        });
+                                      },
+                                    );
+                                  }))
+                          : GestureDetector(child:Center( child:Container(padding: EdgeInsets.fromLTRB(20, 40, 20, 20),child:Column(
+                              children: [
+                                Text("Click the plus to mix a drink!",textAlign: TextAlign.center, style: TextStyle(fontSize: 40, )),
+                                
+                                Expanded(child:Align(alignment: Alignment.bottomCenter, child:Lottie.asset("lib/assets/arrow.json",
+                                    controller: _animationController,
+                                    onLoaded: (composition) {
+                                  _animationController.duration =
+                                      composition.duration;
+                                  _animationController.forward();
+                                },alignment: Alignment.bottomCenter))), 
+                              ]),
+                            )),onTap: () {
+                                    if (_animationController.isCompleted) {
+                                      _animationController.reverse();
+                                    } else if (_animationController
+                                        .isAnimating) {
+                                      _animationController.reverse();
+                                    } else {
+                                      _animationController.forward();
+                                    }
+                                    
+                                  },);
                     } else {
                       return Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Lottie.asset('lib/assets/loading.json',
-                              controller: _animationController,
-                              onLoaded: (composition) {
-                            _animationController.duration =
-                                composition.duration;
-                            _animationController.repeat();
-                          }),
-                        )
-                      ],
-                    ),
-                    Text("Getting ingrediboos...")
-                  ],
-                ));
+                          child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Lottie.asset('lib/assets/loading.json',
+                                    controller: _animationController,
+                                    onLoaded: (composition) {
+                                  _animationController.duration =
+                                      composition.duration;
+                                  _animationController.repeat();
+                                }),
+                              )
+                            ],
+                          ),
+                          Text("Getting ingrediboos...")
+                        ],
+                      ));
                     }
                   },
                   future: _ingredientController.initWithFuture(),

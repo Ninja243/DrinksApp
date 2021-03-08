@@ -3,6 +3,7 @@ class DrinkText {
   final String name;
   final String recipe;
   final String ingredients;
+  final int percentage;
 
-  DrinkText(this.name, this.ingredients, this.recipe);
+  DrinkText(this.name, this.ingredients, this.recipe, this.percentage);
 }
