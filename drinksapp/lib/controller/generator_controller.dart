@@ -152,6 +152,82 @@ class DrinkGenerator {
       var pi = _ingredientController.getIngredients();
       switch (t) {
         // TODO
+        case GeneratorBehaviourType.DEATH:
+          var di = _ingredientController.searchMultipleByPercentage(60, 0);
+          if (di.length > 5) {
+            pi = di;
+          }
+          if (pi.length > 5) {
+            pi.shuffle();
+            for (int i = 0; i < 4; i++) {
+              ui.add(pi[i]);
+            }
+          } else {
+            for (int i = 0; i < pi.length; i++) {
+              ui.add(pi[i]);
+            }
+          }
+          break;
+        case GeneratorBehaviourType.HUGO_ADVERT:
+          Ingredient hugo = _ingredientController.searchByName("hugo");
+          if (hugo == null) {
+            throw ("Please add some Hugo");
+          }
+          ui.add(hugo);
+          if (pi.length > 4) {
+            pi.shuffle();
+            for (int i = 0; i < 3; i++) {
+              ui.add(pi[i]);
+            }
+          } else {
+            for (int i = 0; i < pi.length; i++) {
+              ui.add(pi[i]);
+            }
+          }
+          break;
+        case GeneratorBehaviourType.WATER_ONLY:
+          Ingredient water = _ingredientController.searchByName("water");
+          if (water == null) {
+            throw ("Please add some water");
+          }
+          ui.add(water);
+          if (pi.length > 4) {
+            pi.shuffle();
+            for (int i = 0; i < 3; i++) {
+              ui.add(pi[i]);
+            }
+          } else {
+            for (int i = 0; i < pi.length; i++) {
+              ui.add(pi[i]);
+            }
+          }
+          break;
+        case GeneratorBehaviourType.NON_ALCOHOLIC:
+          var na = _ingredientController.searchMultipleByPercentage(1, 0);
+          if (na.length > 4) {
+            pi.shuffle();
+            for (int i = 0; i < 3; i++) {
+              ui.add(na[i]);
+            }
+          } else {
+            for (int i = 0; i < na.length; i++) {
+              ui.add(na[i]);
+            }
+          }
+          break;
+        case GeneratorBehaviourType.UNDER_18:
+          var na = _ingredientController.searchMultipleByPercentage(0, 0);
+          if (na.length > 4) {
+            pi.shuffle();
+            for (int i = 0; i < 3; i++) {
+              ui.add(na[i]);
+            }
+          } else {
+            for (int i = 0; i < na.length; i++) {
+              ui.add(na[i]);
+            }
+          }
+          break;
         default:
           if (pi.length > 5) {
             pi.shuffle();
@@ -163,6 +239,7 @@ class DrinkGenerator {
               ui.add(pi[i]);
             }
           }
+          break;
       }
       List<String> iNames = [];
       for (Ingredient i in ui) {
@@ -197,6 +274,10 @@ class DrinkGenerator {
           RecipeGPTResponse r2 =
               new RecipeGPTResponse.fromJson(jsonDecode(result.body));
           d.recipe = r2.prompt;
+          if (_settingsController.getActiveBehaviourType() ==
+              GeneratorBehaviourType.WATER_ONLY) {
+                d.recipe = d.recipe + "\n\n" + "P.S. Don't forget to check if a jug is full of water by pouring it's contents onto a counter!";
+              }
           //d.recipe = d.recipe + "\n\n" + _closingPhrases[0];
           // print(d.toJson().toString());
           _drinkController.addDrink(d);
@@ -340,7 +421,7 @@ class DrinkGenerator {
                 currentPercentage + (additiveUnit * water.percentage / 100);
           }
           d.recipe = d.recipe +
-              "\nFinally, pour about two liters of water into a jug and check to see if the jug is full by pouring the contents of the jug onto the floor.";
+              "\nFinally, pour about two liters of water into a jug and check to see if the jug is full by pouring the contents of the jug onto a counter!";
           break;
         default:
           targetPercentage = 20;
