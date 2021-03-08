@@ -106,7 +106,7 @@ class DrinkGenerator {
           " " +
           _unitPreparationMethods[0] +
           " the " +
-          i.name +
+          i.name.toLowerCase() +
           ".";
     }
     if (index % 2 == 1) {
@@ -114,7 +114,7 @@ class DrinkGenerator {
       _unitAdditionMethods.shuffle();
       return _unitPrePreparationMethods[0].capitalizeFirst +
           " the " +
-          i.name +
+          i.name.toLowerCase() +
           " and " +
           _unitAdditionMethods[0] +
           " it into your glass.";
@@ -125,7 +125,7 @@ class DrinkGenerator {
         " the " +
         _unitPostPreparationMethods[0] +
         " " +
-        i.name +
+        i.name.toLowerCase() +
         " into your glass.";
   }
 
