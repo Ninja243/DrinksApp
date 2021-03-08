@@ -63,6 +63,10 @@ flutter:
   - "lib/assets/user.json"
   - "lib/assets/error.json"
   - "lib/assets/baby.json"
+  fonts:
+   - family: Canterbury
+     fonts:
+       - asset: "lib/assets/Canterbury.ttf"
 
   # To add assets to your application, add an assets section, like this:
   # assets:

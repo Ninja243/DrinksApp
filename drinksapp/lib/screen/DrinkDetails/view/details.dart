@@ -9,7 +9,7 @@ class DrinkDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final DrinkText args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-        body: Text("For this drink, you're going to need:\n"+args.ingredients+"\n"+ args.recipe),
+        body: Text("For this drink, you're going to need:\n"+args.ingredients+"\n\n"+ args.recipe),
         appBar: AppBar(
           title: Text(
             args.name,
